@@ -7,7 +7,7 @@ const connectDB = require("./config/db")
 const cookieParser = require("cookie-parser")
 const path = require("path")
 const colors = require("colors")
-const errorHandler = require("")
+const errorHandler = require("./middleware/customizederror"); //handles error
 
 
 dotenv.config({
