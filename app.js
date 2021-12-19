@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv")
 const morgan = require("morgan")
+const json = require("body-parser");
 const cors = require("cors")
 const fileupload = require("express-fileupload");
 const connectDB = require("./config/db")
@@ -10,12 +11,16 @@ const colors = require("colors")
 const errorHandler = require("./middleware/customizederror"); //handles error
 
 
+
+
 dotenv.config({
     path: "./config/config.env",
 });
 
 // Connect to mongoDB database
 connectDB();
+
+const user_routes = require("./routes/user")
 
 // initialize out app variable with express
 const app = express();
@@ -40,6 +45,8 @@ app.use(fileupload());
 
 // Set static folder
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use("/", user_routes);
 
 
 // To use the custom error message
