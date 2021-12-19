@@ -1,7 +1,7 @@
 const crypto = require("crypto"); //to generate the token and hash it
 const mongoose = require("mongoose");
-// const bcrypt = require("bcryptjs");
-// const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
@@ -74,7 +74,7 @@ UserSchema.methods.matchPassword  =  async function (enteredPassword) {
 
 
 //generate and hash password token 
-UserSchema.methods.getResetPasswordToken = function(){
+UserSchema.methods.getResetPasswordToken = function(enteredPassword){
     //generate the token 
     const resetToken = crypto.randomBytes(20).toString("hex");
 

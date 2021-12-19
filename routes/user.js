@@ -14,5 +14,7 @@ router.get("/", (req, res)=>{
     res.send("success")
 })
 
+router.post("/register", userController.register);
+router.get("/login", userController.login);
 
 module.exports=router
