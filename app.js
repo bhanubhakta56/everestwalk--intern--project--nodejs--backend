@@ -22,6 +22,7 @@ connectDB();
 
 const user_routes = require("./routes/user");
 const cart_routes = require("./routes/cart");
+const order_routes = require("./routes/order");
 
 // initialize out app variable with express
 const app = express();
@@ -49,6 +50,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", user_routes);
 app.use("/cart", cart_routes);
+app.use("/order", order_routes);
 
 
 // To use the custom error message

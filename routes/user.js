@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const passport = require('passport');
-const { addProduct, productPhoto, getAllProduct } = require("../controller/product");
+const { addProduct, productPhoto, getAllProduct, searchProduct } = require("../controller/product");
 
 const userController = require("../controller/user");
 const { protect, checkAdmin } = require("../middleware/auth");
