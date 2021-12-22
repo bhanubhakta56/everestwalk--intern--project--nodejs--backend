@@ -20,7 +20,8 @@ dotenv.config({
 // Connect to mongoDB database
 connectDB();
 
-const user_routes = require("./routes/user")
+const user_routes = require("./routes/user");
+const cart_routes = require("./routes/cart");
 
 // initialize out app variable with express
 const app = express();
@@ -47,6 +48,7 @@ app.use(fileupload());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", user_routes);
+app.use("/cart", cart_routes);
 
 
 // To use the custom error message
