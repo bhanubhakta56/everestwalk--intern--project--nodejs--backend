@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const passport = require('passport');
+const { addProduct, productPhoto, getAllProduct } = require("../controller/product");
 
-const userController = require("../controller/user")
+const userController = require("../controller/user");
+const { protect, checkAdmin } = require("../middleware/auth");
 
 router.get("/auth/facebook", passport.authenticate("facebook"));
 
@@ -16,5 +18,13 @@ router.get("/", (req, res)=>{
 
 router.post("/register", userController.register);
 router.get("/login", userController.login);
+
+//to add product and image
+router.post("/addProduct", protect, checkAdmin, addProduct);
+router.put("/:id/ProductImage", protect, checkAdmin, productPhoto);
+
+router.get("/product", getAllProduct);
+
+router.get("/search/:product", searchProduct);
 
 module.exports=router

@@ -1,24 +1,48 @@
-// expose our config directly to our application using module.exports
-module.exports = {
+//PROTECT THE MIDDLEWARE
+const jwt = require("jsonwebtoken");
+const asyncHandler = require("./async");
+const ErrorResponse = require("../utils/errorResponse");
+const User = require("../models/user");
 
-    'facebookAuth' : {
-        'clientID'      : '474610734185947', // your App ID
-        'clientSecret'  : 'd3168799e3690721fbc0cb505651dd78', // your App Secret
-        'callbackURL'   : 'http://localhost:3000/auth/facebook/callback',
-        'profileURL'    : 'https://graph.facebook.com/v2.5/me?fields=first_name,last_name,email',
-        'profileFields' : ['id', 'email', 'name'] // For requesting permissions from Facebook API
-    },
+//Protect routes
+exports.protect = asyncHandler(async (req, res, next) => {
+  let token;
 
-    // 'twitterAuth' : {
-    //     'consumerKey'       : 'your-consumer-key-here',
-    //     'consumerSecret'    : 'your-client-secret-here',
-    //     'callbackURL'       : 'http://localhost:8080/auth/twitter/callback'
-    // },
+  // console.log(req.headers.authorization);
 
-    // 'googleAuth' : {
-    //     'clientID'      : 'your-secret-clientID-here',
-    //     'clientSecret'  : 'your-client-secret-here',
-    //     'callbackURL'   : 'http://localhost:8080/auth/google/callback'
-    // }
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    // Set token from Bearer token in header
+    token = req.headers.authorization.split(" ")[1];
+  }
 
-};
+  //Make sure token exist
+  if (!token) {
+    return next(new ErrorResponse("Not authorized to access this route", 401));
+  }
+
+  try {
+    //Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // console.log(decoded);
+    req.user = await User.findById(decoded.id);
+    next();
+  } catch (err) {
+    return next(new ErrorResponse("Not authorized to access this route", 401));
+  }
+});
+//----------------------------check Owner------------------
+exports.checkAdmin = asyncHandler(async(req, res, next)=>{
+  try{
+    if(!req.user){
+      return next(new ErrorResponse("Not Logged in", 401));
+    }
+    else if(!req.user.isAdmin){
+      return next(new ErrorResponse("You are not allowed to add product", 401));
+    }
+  }catch(err){
+    return next(new ErrorResponse("Error!!! Invalid User", 401));
+  }
+});

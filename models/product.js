@@ -37,11 +37,11 @@ const ProductSchema = new Schema({
         required:true,
         trim:true
     },
-    picture:{
+    picture:[{
         type:String,
         required:true,
         trim:true
-    },
+    }],
     createdAt: {
         type: Date,
         default: Date.now,
